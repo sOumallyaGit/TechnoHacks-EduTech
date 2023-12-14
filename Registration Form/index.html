@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .error {
+            color: red;
+        }
+
+        /* CSS for SweetAlert popups */
+        .swal2-popup {
+            font-size: 1rem;
+        }
+
+        .swal2-title {
+            font-size: 1.5rem;
+        }
+
+        .swal2-content {
+            font-size: 1.2rem;
+        }
+
+        .swal2-icon {
+            font-size: 2rem;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <div class="main">
+        <div class="register">
+            <h2>Register Here</h2>
+            <form id="register" onsubmit="return validateForm(event)" method="post">
+                <label>First Name : </label>
+                <br>
+                <input type="text" name="fname" id="fname" placeholder="Enter Your First Name">
+                <span id="fnameError" class="error"></span>
+                <br><br>
+                <label>Last name : </label>
+                <br>
+                <input type="text" name="lname" id="lname" placeholder="Enter Your Last Name">
+                <span id="lnameError" class="error"></span>
+                <br><br>
+                <label>Your Age : </label>
+                <br>
+                <input type="number" name="age" id="age" placeholder="How old are you?">
+                <span id="ageError" class="error"></span>
+                <br><br>
+                <label>Gender : </label>
+                <br>
+                <br>
+                <input type="radio" name="gender" id="male">
+                &nbsp;
+                <span id="male">Male</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="gender" id="female">
+                &nbsp;
+                <span id="female">Female</span>
+                <span id="genderError" class="error"></span>
+                <br><br>
+                <label >Known Language : </label>
+                <br><br>
+                &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="lang" id="hindi" class="checkbox">
+                <span id="hindi">1.Hindi</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="lang" id="eng" class="checkbox">
+                <span id="eng">2.English</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="lang" id="bengali" class="checkbox">
+                <span id="bengali">3.Bengali</span>
+                <span id="langError" class="error"></span>
+                <br><br>
+                <input type="submit" value="Submit" name="submit" id="submit">
+            </form>
+        </div><!-- End Register -->
+    </div><!-- End main -->
+
+    <script>
+        function validateForm(event) {
+            event.preventDefault();
+
+            const errors = {};
+            const fname = document.getElementById('fname').value.trim();
+            const lname = document.getElementById('lname').value.trim();
+            const age = document.getElementById('age').value.trim();
+            const gender = document.querySelector('input[name="gender"]:checked');
+            const lang = document.querySelectorAll('input[name="lang"]:checked');
+
+            // Validating all inputs
+            if (!fname) {
+                errors.fname = "First Name is required";
+            }
+
+            if (!lname) {
+                errors.lname = "Last Name is required";
+            }
+
+            if (!age || isNaN(age) || parseInt(age) <= 0) {
+                errors.age = "Please enter a valid age";
+            }
+
+            if (!gender) {
+                errors.gender = "Please select a gender";
+            }
+
+            if (lang.length === 0) {
+                errors.lang = "Please select at least one language";
+            }
+
+            displayErrors(errors);
+            if (Object.keys(errors).length === 0) {
+                alertSuccess("Form submitted successfully!");
+                clearForm();
+            }
+        }
+
+        function displayErrors(errors) {
+            const errorElements = document.querySelectorAll('.error');
+            errorElements.forEach(element => element.innerText = '');
+            for (const key in errors) {
+                if (errors.hasOwnProperty(key)) {
+                    const errorElement = document.getElementById(`${key}Error`);
+                    if (errorElement) {
+                        errorElement.innerText = errors[key];
+                    }
+                }
+            }
+            if (Object.keys(errors).length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: Object.values(errors).join('<br>'),
+                    customClass: {
+                        popup: 'custom-popup-class',
+                        icon: 'custom-icon-class',
+                        title: 'custom-title-class',
+                        content: 'custom-content-class',
+                    },
+                });
+            }
+        }
+
+        function alertSuccess(message) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: message,
+                customClass: {
+                    popup: 'custom-popup-class',
+                    icon: 'custom-icon-class',
+                    title: 'custom-title-class',
+                    content: 'custom-content-class',
+                },
+            });
+        }
+
+        function clearForm() {
+            // Clearing input fields
+            document.getElementById('fname').value = '';
+            document.getElementById('lname').value = '';
+            document.getElementById('age').value = '';
+            document.getElementById('male').checked = false;
+            document.getElementById('female').checked = false;
+            document.getElementById('hindi').checked = false;
+            document.getElementById('eng').checked = false;
+            document.getElementById('bengali').checked = false;
+        }
+    </script>
+</body>
+
+</html>
