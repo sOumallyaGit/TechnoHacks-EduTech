@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form</title>
+  <link rel="stylesheet" href="style.css">
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' rel='stylesheet'>
+  <style>
+    #password-strength {
+      font-weight: bold;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <form id="loginForm" onsubmit="validateForm(); return false;">
+      <h1>Login</h1>
+      <div class="input-box">
+        <input type="text" id="username" placeholder="Username" required>
+        <i class='fas fa-user'></i>
+      </div>
+      <div class="input-box">
+        <input type="password" id="password" placeholder="Password" required oninput="checkPasswordStrength()">
+        <i class='fas fa-lock'></i>
+        <span id="password-strength"></span>
+      </div>
+      <div class="remember-forgot">
+        <label><input type="checkbox" id="rememberMe">Remember Me</label>
+        <a href="#">Forgot Password</a>
+      </div>
+      <button type="submit" class="btn">Login</button>
+      <div class="register-link">
+        <p>Don't have an account? <a href="registration.html">Register</a></p>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function validateForm() {
+      var username = document.getElementById("username").value;
+      var password = document.getElementById("password").value;
+      var rememberMe = document.getElementById("rememberMe").checked;
+
+      // Perform basic input validation
+      if (username.trim() === "" || password.trim() === "") {
+        alert("Username and password are required!");
+        return;
+      }
+
+      // Hash the password (you should use a stronger hashing algorithm in production)
+      var hashedPassword = hashPassword(password);
+
+      // Now you can send the hashedPassword, username, and rememberMe to the server for further processing
+
+      // For this example, just log the values
+      console.log("Username:", username);
+      console.log("Hashed Password:", hashedPassword);
+      console.log("Remember Me:", rememberMe);
+
+      // Display success message
+      alert("Login successful!");
+
+      // You can also reset the form if needed
+      document.getElementById("loginForm").reset();
+    }
+
+    function hashPassword(password) {
+      // In a production environment, use a secure hashing algorithm like bcrypt
+      // For simplicity in this example, using a basic hash function (not secure for real-world use)
+      var hash = 0;
+      for (var i = 0; i < password.length; i++) {
+        var char = password.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+      }
+      return hash;
+    }
+
+    function checkPasswordStrength() {
+      var password = document.getElementById("password").value;
+      var strength = document.getElementById("password-strength");
+
+      // Check password strength and update the indicator
+      if (password.length >= 12 && /\d/.test(password) && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password)) {
+        strength.innerHTML = "Strong";
+        strength.style.color = "green";
+      } else if (password.length >= 8 && /\d/.test(password) && /[a-zA-Z]/.test(password)) {
+        strength.innerHTML = "Moderate";
+        strength.style.color = "orange";
+      } else {
+        strength.innerHTML = "Weak";
+        strength.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>
